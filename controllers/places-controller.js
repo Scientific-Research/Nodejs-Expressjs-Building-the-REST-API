@@ -61,5 +61,25 @@ module.exports.getPlaceByUserId = (req, res, next) => {
   res.json({ user });
 };
 
+module.exports.createPlace = (req, res, next) => {
+  // const {} = req.body.;
+  // console.log(place);
+  title = req.body.title;
+  description = req.body.description;
+  creator = req.body.creator;
+  address = req.body.address;
+  location = req.body.coordinates;
+
+  const createdPlace = {
+    title: "Christmas 2023",
+    description: "Beautiful",
+    creator: "Nikolas",
+    address: "Berlin",
+    location: "Germany",
+  };
+  DUMMY_PLACES.push(createdPlace);
+  res.status(201).json({ place: createdPlace });
+};
+
 // module.exports.getPlaceById = getPlaceById;
 // module.exports.getPlaceByUserId = getPlaceByUserId;

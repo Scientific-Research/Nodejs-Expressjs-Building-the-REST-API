@@ -6,6 +6,8 @@ const usersRoutes = require("./routes/users-routes");
 
 // Middleware
 const app = express();
+app.use(bodyParser.json());
+
 app.use("/api/places", placesRoutes); // => /api/places/...
 // app.use("/api/user", usersRoutes); // => /api/users/...
 

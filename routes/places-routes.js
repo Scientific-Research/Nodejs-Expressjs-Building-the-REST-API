@@ -4,6 +4,7 @@ const router = express.Router();
 const {
   getPlaceById,
   getPlaceByUserId,
+  createPlace,
 } = require("../controllers/places-controller");
 
 // oder
@@ -17,4 +18,5 @@ router.get("/user/:uid", getPlaceByUserId);
 // router.get("/:pid", placesControllers.getPlaceById);
 // router.get("/user/:uid", placesControllers.getPlaceByUserId);
 
+router.post("/", createPlace);
 module.exports = router;
