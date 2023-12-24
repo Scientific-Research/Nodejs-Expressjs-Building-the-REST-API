@@ -9,6 +9,14 @@ const app = express();
 app.use("/api/places", placesRoutes); // => /api/places/...
 // app.use("/api/user", usersRoutes); // => /api/users/...
 
+app.use((error, req, res, next) => {
+  if (res.headerSent) {
+    return next(error);
+  }
+  res.status(error.code || 500);
+  res.json({ message: error.message || "An unknown error ocurred!" });
+});
+
 app.listen(5000, () => {
   console.log("Connected to the server successfully!");
 });

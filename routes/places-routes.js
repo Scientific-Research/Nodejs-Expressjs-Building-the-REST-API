@@ -24,9 +24,12 @@ router.get("/:pid", (req, res, next) => {
   // res.json({ message: "It works!" }).status(200);
   // res.json({ place: place }).status(200);
   if (!place) {
-    return res
-      .status(404)
-      .json({ message: "Could not find a place for the provided place id!" });
+    // return res
+    //   .status(404)
+    //   .json({ message: "Could not find a place for the provided place id!" });
+    const error = new Error("Could not find a place for the provided id.");
+    error.code = 404;
+    throw error;
   }
   res.json({ place }).status(200); // => {place} => {place:place}
 });
@@ -38,9 +41,13 @@ router.get("/user/:uid", (req, res, next) => {
   console.log(user);
   // res.json({ user: user });
   if (!user) {
-    return res
-      .status(404)
-      .json({ message: "Could not find a place for the provided user id!" });
+    // return res
+    //   .status(404)
+    //   .json({ message: "Could not find a place for the provided user id!" });
+    const error = new Error("Could not find a user for the provided id.");
+    error.code = 404;
+    return next(error);
+    // throw error;
   }
   res.json({ user });
 });
