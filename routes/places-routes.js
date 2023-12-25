@@ -5,6 +5,8 @@ const {
   getPlaceById,
   getPlaceByUserId,
   createPlace,
+  updatePlace,
+  deletePlace,
 } = require("../controllers/places-controller");
 
 // oder
@@ -19,4 +21,6 @@ router.get("/user/:uid", getPlaceByUserId);
 // router.get("/user/:uid", placesControllers.getPlaceByUserId);
 
 router.post("/", createPlace);
+router.patch("/:pid", updatePlace);
+router.delete("/:pid", deletePlace);
 module.exports = router;

@@ -86,5 +86,33 @@ module.exports.createPlace = (req, res, next) => {
   res.status(201).json({ place: createdPlace });
 };
 
+module.exports.updatePlace = (req, res, next) => {
+  // // first of all, we have to get the Place
+  const placeId = req.params.pid;
+  const { title, description } = req.body;
+
+  let updatedPalce = DUMMY_PLACES.find((p) => placeId === p.id);
+  let placeIndex = DUMMY_PLACES.findIndex((p) => placeId === p.id);
+
+  updatedPalce = {
+    // title and description will be updated - via req.body
+    title: title,
+    description: description,
+    // these data will not be updated and remain as same data as before!
+    id: updatedPalce.id,
+    location: updatedPalce.location,
+    address: updatedPalce.address,
+    creator: updatedPalce.creator,
+  };
+
+  DUMMY_PLACES[placeIndex] = updatedPalce;
+  console.log(DUMMY_PLACES);
+
+  res.status(200).json({ message: "Updated Place: ", place: updatedPalce });
+  // res.status(200).json({ place: updatedPalce });
+};
+
+module.exports.deletePlace = (req, res, next) => {};
+
 // module.exports.getPlaceById = getPlaceById;
 // module.exports.getPlaceByUserId = getPlaceByUserId;
