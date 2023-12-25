@@ -3,7 +3,7 @@ const router = express.Router();
 
 const {
   getPlaceById,
-  getPlaceByUserId,
+  getPlacesByUserId,
   createPlace,
   updatePlace,
   deletePlace,
@@ -14,7 +14,7 @@ const {
 
 // /api/places/p1
 router.get("/:pid", getPlaceById);
-router.get("/user/:uid", getPlaceByUserId);
+router.get("/user/:uid", getPlacesByUserId);
 
 // oder
 // router.get("/:pid", placesControllers.getPlaceById);
