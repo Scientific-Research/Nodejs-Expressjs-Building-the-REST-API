@@ -62,22 +62,25 @@ module.exports.getPlaceByUserId = (req, res, next) => {
 };
 
 module.exports.createPlace = (req, res, next) => {
-  // const {} = req.body.;
-  // console.log(place);
-  title = req.body.title;
-  description = req.body.description;
-  creator = req.body.creator;
-  address = req.body.address;
-  location = req.body.coordinates;
+  // using deconstruction:
+  const { title, description, creator, address, coordinates } = req.body;
+
+  // or using this classic way:
+  // title = req.body.title;
+  // description = req.body.description;
+  // creator = req.body.creator;
+  // address = req.body.address;
+  // location = req.body.coordinates;
 
   const createdPlace = {
-    title: "Christmas 2023",
-    description: "Beautiful",
-    creator: "Nikolas",
-    address: "Berlin",
-    location: "Germany",
+    title,
+    description,
+    creator,
+    address,
+    location: coordinates,
   };
   DUMMY_PLACES.push(createdPlace);
+  console.log(DUMMY_PLACES); // shows us old Dummy_Places + createdPlace
   res.status(201).json({ place: createdPlace });
 };
 
