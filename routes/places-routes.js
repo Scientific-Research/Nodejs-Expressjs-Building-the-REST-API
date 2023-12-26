@@ -1,9 +1,10 @@
-// const express = require("express");
 const { Router } = require("express");
-const { check } = require("express-validator");
-
-// const router = express.Router();
 const router = Router();
+
+// const express = require("express");
+// const router = express.Router();
+
+const { check } = require("express-validator");
 
 const {
   getPlaceById,
