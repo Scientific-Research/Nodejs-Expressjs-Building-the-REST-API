@@ -93,6 +93,11 @@ module.exports.createPlace = (req, res, next) => {
 };
 
 module.exports.updatePlace = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    console.log(errors);
+    throw new HttpError("Invalid inputs passed, plesae check your data!", 422);
+  }
   // // first of all, we have to get the Place
   const placeId = req.params.pid;
   const { title, description } = req.body;
