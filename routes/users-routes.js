@@ -8,7 +8,6 @@ const { getUsers, signup, login } = require("../controllers/users-controller");
 
 // /api/users/p1
 router.get("/", getUsers);
-
 router.post("/signup", signup);
 router.post("/login", login);
 
