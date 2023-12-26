@@ -1,4 +1,5 @@
 const { v4: uuidv4 } = require("uuid");
+const { validationResult } = require("express-validator");
 const HttpError = require("../models/http-error");
 
 let DUMMY_PLACES = [
@@ -58,6 +59,12 @@ module.exports.getPlacesByUserId = (req, res, next) => {
 };
 
 module.exports.createPlace = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    console.log(errors);
+    // res.status(422).json({ message: "ERROR!", Error: errors });
+    throw new HttpError("Invalid inputs passed, plesae check your data!", 422);
+  }
   // using deconstruction:
   const { title, description, creator, address, coordinates } = req.body;
 
@@ -67,6 +74,10 @@ module.exports.createPlace = (req, res, next) => {
   // creator = req.body.creator;
   // address = req.body.address;
   // location = req.body.coordinates;
+
+  // manual validation without using express-validator:
+  // if (title.trim().length === 0) {
+  // }
 
   const createdPlace = {
     id: uuidv4(),
