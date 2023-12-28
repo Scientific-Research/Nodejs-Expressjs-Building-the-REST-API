@@ -33,13 +33,15 @@ module.exports.getPlaceById = async (req, res, next) => {
   console.log(placeId);
 
   try {
-    // const place = await Place.findOne((p) => p.id === placeId);
-    const place = await Place.findOne({ _id: placeId });
+    // const place = await Place.findOne((p) => p.id === placeId); this doesn't work!
+    // const place = await Place.findOne({ _id: placeId }); this works too!
+    const place = await Place.findById(placeId);
     console.log(place);
     if (place.length !== 0) {
       return res.status(200).json({
         Message: "This Place retrieved from Database: ",
-        Place: place,
+        // Place: place,
+        Place: place.toObject({ getters: true }), // give us the _id as id in string format
       });
     }
   } catch (err) {
@@ -49,9 +51,6 @@ module.exports.getPlaceById = async (req, res, next) => {
     );
     return next(error);
   }
-  return res
-    .status(422)
-    .json({ Message: "Could not find a place for the provided id!" });
 };
 
 module.exports.getPlacesByUserId = async (req, res, next) => {
