@@ -58,12 +58,13 @@ module.exports.getPlacesByUserId = async (req, res, next) => {
   console.log(userId);
   try {
     // const places = await Place.find((p) => p.creator === userId);
-    const places = await Place.find({ creator: userId });
+    const places = await Place.find({ creator: userId }); // find() give us an array
     console.log(places);
     if (places.length !== 0) {
       return res.status(200).json({
         Message: "These Places retrieved from Database: ",
-        Places: places,
+        // Places: places,
+        Places: places.map((place) => place.toObject({ getters: true })),
       });
     }
   } catch (err) {
