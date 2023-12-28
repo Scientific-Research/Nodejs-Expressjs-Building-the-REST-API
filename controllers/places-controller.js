@@ -36,10 +36,10 @@ module.exports.getPlaceById = async (req, res, next) => {
     // const place = await Place.findOne((p) => p.id === placeId);
     const place = await Place.findOne({ _id: placeId });
     console.log(place);
-    if (place || place.length !== 0) {
+    if (place.length !== 0) {
       return res.status(200).json({
         Message: "This Place retrieved from Database: ",
-        Places: place,
+        Place: place,
       });
     }
   } catch (err) {
@@ -54,33 +54,30 @@ module.exports.getPlaceById = async (req, res, next) => {
     .json({ Message: "Could not find a place for the provided id!" });
 };
 
-// module.exports.getPlacesByUserId = async (req, res, next) => {
-//   const userId = req.params.uid;
-//   console.log(userId);
-//   try {
-//     // const places = await Place.find((p) => p.creator === userId);
-//     const places = await Place.find((p) => p.creator === userId);
-//     console.log(places);
-//     res.status(200).json({
-//       Message: "These Places retrieved from Database: ",
-//       Places: places,
-//     });
-//   } catch (error) {
-//     return res.status(500).json({ Message: "Could not find the data!" });
-//   }
-
-//   // const places = DUMMY_PLACES.filter((p) => p.creator === userId);
-//   // console.log(places);
-
-//   // if (!places || places.length === 0) {
-//   //   const error = new HttpError(
-//   //     "Could not find places for the provided user id.",
-//   //     404
-//   //   );
-//   //   return next(error);
-//   // }
-//   // res.json({ places });
-// };
+module.exports.getPlacesByUserId = async (req, res, next) => {
+  const userId = req.params.uid;
+  console.log(userId);
+  try {
+    // const places = await Place.find((p) => p.creator === userId);
+    const places = await Place.find({ creator: userId });
+    console.log(places);
+    if (places.length !== 0) {
+      return res.status(200).json({
+        Message: "These Places retrieved from Database: ",
+        Places: places,
+      });
+    }
+  } catch (err) {
+    const error = new HttpError(
+      "Could not find place(s) for the provided user id.",
+      422
+    );
+    return next(error);
+  }
+  return res
+    .status(422)
+    .json({ Message: "Could not find place(s) for the provided id!" });
+};
 
 module.exports.createPlace = async (req, res, next) => {
   const errors = validationResult(req);
