@@ -19,7 +19,7 @@ const {
 
 // /api/places/p1
 router.get("/:pid", getPlaceById);
-router.get("/user/:uid", getPlacesByUserId);
+// router.get("/user/:uid", getPlacesByUserId);
 
 // oder
 // router.get("/:pid", placesControllers.getPlaceById);
