@@ -2,7 +2,7 @@ const { v4: uuidv4 } = require("uuid");
 const { validationResult } = require("express-validator");
 const HttpError = require("../models/http-error");
 const { getCoordsForAddress } = require("../util/location");
-const  Place  = require("../models/place");
+const Place = require("../models/place");
 
 let DUMMY_PLACES = [
   {
@@ -68,7 +68,7 @@ module.exports.createPlace = async (req, res, next) => {
       new HttpError("Invalid inputs passed, plesae check your data!", 422)
     );
   }
-  // using deconstruction:
+  // using destructuring:
   const { title, description, image, address, creator } = req.body;
 
   let coordinates;
@@ -85,8 +85,16 @@ module.exports.createPlace = async (req, res, next) => {
     location: coordinates,
     creator,
   });
-  const result = await createdPlace.save();
-  res.status(200).json({ message: "Our Created Place:", place: result });
+  try {
+    await createdPlace.save();
+  } catch (err) {
+    const error = new HttpError(
+      "Creating place failed, plesae check your data carefully!",
+      500
+    );
+    return next(error);
+  }
+  res.status(200).json({ message: "Our created Place:", Place: createdPlace });
 };
 
 module.exports.updatePlace = (req, res, next) => {
