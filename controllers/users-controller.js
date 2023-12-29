@@ -1,6 +1,7 @@
 const { v4: uuidv4 } = require("uuid");
 const { validationResult } = require("express-validator");
 const HttpError = require("../models/http-error");
+const User = require("../models/user");
 
 const DUMMY_USERS = [
   {
@@ -11,10 +12,11 @@ const DUMMY_USERS = [
   },
 ];
 
-module.exports.getUsers = (req, res, next) => {
+module.exports.getUsers = async (req, res, next) => {
   //   DUMMY_USERS.map((u) => u.email);
   //   res.status(200).json({ message: "User Information:", users: DUMMY_USERS });
-  res.status(200).json({ users: DUMMY_USERS });
+  const user = await User.find();
+  res.status(200).json({ users: user });
 };
 
 module.exports.signup = (req, res, next) => {
