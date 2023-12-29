@@ -4,30 +4,30 @@ const { getCoordsForAddress } = require("../util/location");
 const Place = require("../models/place");
 const place = require("../models/place");
 
-let DUMMY_PLACES = [
-  {
-    id: "p1",
-    title: "Empire State Building",
-    description: "one of the most famous sky scrapers in the World!",
-    location: {
-      lat: 40.7484405,
-      lng: -73.9856644,
-    },
-    address: "20 W 34th St., New York, NY 10001, United States",
-    creator: "u1",
-  },
-  {
-    id: "p2",
-    title: "Empire State Building",
-    description: "one of the most famous sky scrapers in the World!",
-    location: {
-      lat: 40.7484405,
-      lng: -73.9856644,
-    },
-    address: "20 W 34th St., New York, NY 10001, United States",
-    creator: "u1",
-  },
-];
+// let DUMMY_PLACES = [
+//   {
+//     id: "p1",
+//     title: "Empire State Building",
+//     description: "one of the most famous sky scrapers in the World!",
+//     location: {
+//       lat: 40.7484405,
+//       lng: -73.9856644,
+//     },
+//     address: "20 W 34th St., New York, NY 10001, United States",
+//     creator: "u1",
+//   },
+//   {
+//     id: "p2",
+//     title: "Empire State Building",
+//     description: "one of the most famous sky scrapers in the World!",
+//     location: {
+//       lat: 40.7484405,
+//       lng: -73.9856644,
+//     },
+//     address: "20 W 34th St., New York, NY 10001, United States",
+//     creator: "u1",
+//   },
+// ];
 
 module.exports.getPlaceById = async (req, res, next) => {
   const placeId = req.params.pid;
