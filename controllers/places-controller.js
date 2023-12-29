@@ -126,12 +126,13 @@ module.exports.updatePlace = async (req, res, next) => {
   // // first of all, we have to get the Place
   const placeId = req.params.pid;
   const { title, description } = req.body;
-
-  let updatedPlace = await Place.findById(placeId);
-
+  let updatedPlace;
   try {
+    updatedPlace = await Place.findById(placeId);
+    console.log("before updating title and description:" + updatedPlace);
     updatedPlace.title = title;
     updatedPlace.description = description;
+    console.log("after updating title and description:" + updatedPlace);
     await updatedPlace.save();
   } catch (err) {
     const error = new HttpError(
@@ -140,7 +141,10 @@ module.exports.updatePlace = async (req, res, next) => {
     );
     return next(error);
   }
-  res.status(200).json({ message: "Updated Place: ", Place: updatedPlace });
+  res.status(200).json({
+    message: "Updated Place: ",
+    Place: updatedPlace.toObject({ getters: true }),
+  });
 };
 
 module.exports.deletePlace = (req, res, next) => {
