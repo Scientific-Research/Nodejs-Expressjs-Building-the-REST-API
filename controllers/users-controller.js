@@ -23,19 +23,25 @@ module.exports.signup = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     console.log(errors);
-    throw new HttpError("Invalid inputs passed, plesae check your data!", 422);
+    // throw new HttpError("Invalid inputs passed, plesae check your data!", 422);
+    const error = new HttpError(
+      "Invalid inputs passed, plesae check your data!",
+      422
+    );
+    return next(error); // with throw new ... we will have an error in VSCODE Terminal and this is bad!
   }
 
-  const { name, email, password } = req.body;
-  // const hasUser = DUMMY_USERS.find((u) => u.email === email);
-  const hasUser = User.find({ email: email });
+  const { name, email, password, image, places } = req.body;
+  // in user.js, we have unique:true for email, but it doesn't show us the problem
+  // but here it shows us the error in Terminal clearly!
+  const hasUser = await User.findOne({ email });
 
   if (hasUser) {
     const error = new HttpError(
-      "Could not create user, email already exists!",
+      "Email already exists, pick up a new one!",
       422
     );
-    throw error;
+    return next(error);
   }
 
   const createdUser = new User({
@@ -43,9 +49,12 @@ module.exports.signup = async (req, res, next) => {
     name, // name:name
     email,
     password,
+    image,
+    places,
   });
   try {
     await createdUser.save();
+    res.status(200).json({ User: createdUser });
   } catch (err) {
     const error = new HttpError(
       "Creating user failed, plesae check your data carefully!",
@@ -53,7 +62,7 @@ module.exports.signup = async (req, res, next) => {
     );
     return next(error);
   }
-  res.status(200).json({ message: "Our created User:", User: createdUser });
+  // res.status(200).json({ message: "Our created User:", User: createdUser });
 };
 
 module.exports.login = (req, res, next) => {
