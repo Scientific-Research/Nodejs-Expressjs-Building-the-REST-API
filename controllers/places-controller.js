@@ -2,7 +2,6 @@ const { validationResult } = require("express-validator");
 const HttpError = require("../models/http-error");
 const { getCoordsForAddress } = require("../util/location");
 const Place = require("../models/place");
-const place = require("../models/place");
 
 // let DUMMY_PLACES = [
 //   {

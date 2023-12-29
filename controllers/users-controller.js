@@ -19,7 +19,7 @@ module.exports.getUsers = async (req, res, next) => {
   res.status(200).json({ users: user });
 };
 
-module.exports.signup = (req, res, next) => {
+module.exports.signup = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     console.log(errors);
@@ -27,7 +27,8 @@ module.exports.signup = (req, res, next) => {
   }
 
   const { name, email, password } = req.body;
-  const hasUser = DUMMY_USERS.find((u) => u.email === email);
+  // const hasUser = DUMMY_USERS.find((u) => u.email === email);
+  const hasUser = User.find({ email: email });
 
   if (hasUser) {
     const error = new HttpError(
@@ -37,17 +38,22 @@ module.exports.signup = (req, res, next) => {
     throw error;
   }
 
-  const createdUser = {
-    id: uuidv4(),
+  const createdUser = new User({
+    // id: uuidv4(),
     name, // name:name
     email,
     password,
-  };
-
-  DUMMY_USERS.push(createdUser);
-  console.log(DUMMY_USERS);
-  //   res.status(201).json({ message: "User created", user: createdUser });
-  res.status(201).json({ user: createdUser });
+  });
+  try {
+    await createdUser.save();
+  } catch (err) {
+    const error = new HttpError(
+      "Creating user failed, plesae check your data carefully!",
+      500
+    );
+    return next(error);
+  }
+  res.status(200).json({ message: "Our created User:", User: createdUser });
 };
 
 module.exports.login = (req, res, next) => {
