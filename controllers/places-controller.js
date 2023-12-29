@@ -147,18 +147,26 @@ module.exports.updatePlace = async (req, res, next) => {
   });
 };
 
-module.exports.deletePlace = (req, res, next) => {
+module.exports.deletePlace = async (req, res, next) => {
   const placeId = req.params.pid;
-  if (!DUMMY_PLACES.find((p) => p.id === placeId)) {
-    throw new HttpError("Could not find a place for that id!", 404);
+  console.log(placeId);
+
+  const place = await Place.findById(placeId);
+  if (!place) {
+    const error = new HttpError("Could not find a place for that id!", 404);
+    return next(error);
   }
-  // console.log(placeId);
-
-  DUMMY_PLACES = DUMMY_PLACES.filter((p) => p.id !== placeId);
-  console.log(DUMMY_PLACES);
-
-  res.status(200).json({ message: "remainingPlaces:", place: DUMMY_PLACES });
+  try {
+    await Place.findByIdAndDelete(placeId);
+    console.log(Place);
+    res.status(200).json({
+      message: "Place was deleted successfully! ",
+    });
+  } catch (err) {
+    const error = new HttpError(
+      "Deleting place failed, plesae check your data carefully!",
+      500
+    );
+    return next(error);
+  }
 };
-
-// module.exports.getPlaceById = getPlaceById;
-// module.exports.getPlaceByUserId = getPlaceByUserId;
