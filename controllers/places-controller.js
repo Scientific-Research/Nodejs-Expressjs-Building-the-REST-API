@@ -2,6 +2,7 @@ const { validationResult } = require("express-validator");
 const HttpError = require("../models/http-error");
 const { getCoordsForAddress } = require("../util/location");
 const Place = require("../models/place");
+const place = require("../models/place");
 
 let DUMMY_PLACES = [
   {
@@ -116,7 +117,7 @@ module.exports.createPlace = async (req, res, next) => {
   res.status(200).json({ message: "Our created Place:", Place: createdPlace });
 };
 
-module.exports.updatePlace = (req, res, next) => {
+module.exports.updatePlace = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     console.log(errors);
@@ -126,25 +127,20 @@ module.exports.updatePlace = (req, res, next) => {
   const placeId = req.params.pid;
   const { title, description } = req.body;
 
-  let updatedPalce = DUMMY_PLACES.find((p) => placeId === p.id);
-  let placeIndex = DUMMY_PLACES.findIndex((p) => placeId === p.id);
+  let updatedPlace = await Place.findById(placeId);
 
-  updatedPalce = {
-    // title and description will be updated - via req.body
-    title: title,
-    description: description,
-    // these data will not be updated and remain as same data as before!
-    id: updatedPalce.id,
-    location: updatedPalce.location,
-    address: updatedPalce.address,
-    creator: updatedPalce.creator,
-  };
-
-  DUMMY_PLACES[placeIndex] = updatedPalce;
-  console.log(DUMMY_PLACES);
-
-  res.status(200).json({ message: "Updated Place: ", place: updatedPalce });
-  // res.status(200).json({ place: updatedPalce });
+  try {
+    updatedPlace.title = title;
+    updatedPlace.description = description;
+    await updatedPlace.save();
+  } catch (err) {
+    const error = new HttpError(
+      "Updating place failed, plesae check your data carefully!",
+      500
+    );
+    return next(error);
+  }
+  res.status(200).json({ message: "Updated Place: ", Place: updatedPlace });
 };
 
 module.exports.deletePlace = (req, res, next) => {
