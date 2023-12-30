@@ -75,18 +75,26 @@ module.exports.signup = async (req, res, next) => {
   // res.status(200).json({ message: "Our created User:", User: createdUser });
 };
 
-module.exports.login = (req, res, next) => {
+module.exports.login = async (req, res, next) => {
   const { email, password } = req.body;
-  const identifiedUser = DUMMY_USERS.find((u) => u.email === email);
-  //   console.log(identifiedUser);
+  let identifiedUser;
 
+  try {
+    identifiedUser = await User.findOne({ email });
+  } catch (err) {
+    const error = new HttpError(
+      "Signing failed, plesae check your data carefully!",
+      500
+    );
+    return next(error);
+  }
   if (!identifiedUser || identifiedUser.password !== password) {
     const error = new HttpError(
-      "Could not identify the user, credentials seem to be wrong",
+      "Could not identify the user, credentials seem to be wrong!",
       401
     );
-    throw error;
-    // return next(error);
+    // throw error;
+    return next(error);
   }
   res.status(200).json({ message: "User logged in!:", user: identifiedUser });
 };
