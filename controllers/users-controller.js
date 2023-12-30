@@ -3,19 +3,26 @@ const { validationResult } = require("express-validator");
 const HttpError = require("../models/http-error");
 const User = require("../models/user");
 
-const DUMMY_USERS = [
-  {
-    id: "u1",
-    name: "Max Schwarz",
-    email: "test@test.com",
-    password: "testers",
-  },
-];
+// const DUMMY_USERS = [
+//   {
+//     id: "u1",
+//     name: "Max Schwarz",
+//     email: "test@test.com",
+//     password: "testers",
+//   },
+// ];
 
 module.exports.getUsers = async (req, res, next) => {
-  //   DUMMY_USERS.map((u) => u.email);
-  //   res.status(200).json({ message: "User Information:", users: DUMMY_USERS });
-  const user = await User.find();
+  let user;
+  try {
+    user = await User.find();
+  } catch (err) {
+    const error = new HttpError(
+      "Getting the users failed, please try again later!",
+      500
+    );
+    return next(error);
+  }
   res.status(200).json({ users: user });
 };
 
@@ -64,7 +71,6 @@ module.exports.signup = async (req, res, next) => {
   });
   try {
     await createdUser.save();
-    res.status(201).json({ User: createdUser.toObject({ getters: true }) });
   } catch (err) {
     const error = new HttpError(
       "Signing up failed, plesae check your data carefully!",
@@ -72,6 +78,7 @@ module.exports.signup = async (req, res, next) => {
     );
     return next(error);
   }
+  res.status(201).json({ User: createdUser.toObject({ getters: true }) });
   // res.status(200).json({ message: "Our created User:", User: createdUser });
 };
 
