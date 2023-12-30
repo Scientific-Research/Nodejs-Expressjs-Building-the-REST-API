@@ -13,17 +13,20 @@ const User = require("../models/user");
 // ];
 
 module.exports.getUsers = async (req, res, next) => {
-  let user;
+  let users;
   try {
-    user = await User.find();
+    users = await User.find({}, "email name"); // one way
+    // users = await User.find({}, "-password"); // second way
   } catch (err) {
     const error = new HttpError(
-      "Getting the users failed, please try again later!",
+      "Fetching users failed, please try again later!",
       500
     );
     return next(error);
   }
-  res.status(200).json({ users: user });
+  res
+    .status(200)
+    .json({ users: users.map((user) => user.toObject({ getters: true })) });
 };
 
 module.exports.signup = async (req, res, next) => {
