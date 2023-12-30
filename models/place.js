@@ -9,7 +9,9 @@ const placeSchema = new mongoose.Schema({
     lat: { type: Number, required: true },
     lng: { type: Number, required: true },
   },
-  creator: { type: String, required: true },
+  // creator: { type: String, required: true },
+  // we need the Id of a creator to know whom(which user) created that place!
+  creator: { type: mongoose.Types.ObjectId, required: true, ref: "User" },
 });
 
 module.exports = mongoose.model("Place", placeSchema);

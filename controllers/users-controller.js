@@ -41,7 +41,8 @@ module.exports.signup = async (req, res, next) => {
     return next(error); // with throw new ... we will have an error in VSCODE Terminal and this is bad!
   }
 
-  const { name, email, password, image, places } = req.body;
+  // const { name, email, password, image, places } = req.body;
+  const { name, email, password, image } = req.body; // places now are as an array
   // in user.js, we have unique:true for email, but it doesn't show us the problem
   // but here it shows us the error in Terminal clearly!
 
@@ -70,7 +71,8 @@ module.exports.signup = async (req, res, next) => {
     email,
     password,
     image,
-    places,
+    // places,
+    places: [], // one user can have multiple places
   });
   try {
     await createdUser.save();
