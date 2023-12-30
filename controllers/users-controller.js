@@ -34,9 +34,19 @@ module.exports.signup = async (req, res, next) => {
   const { name, email, password, image, places } = req.body;
   // in user.js, we have unique:true for email, but it doesn't show us the problem
   // but here it shows us the error in Terminal clearly!
-  const hasUser = await User.findOne({ email });
 
-  if (hasUser) {
+  let userExistsAlready;
+  try {
+    userExistsAlready = await User.findOne({ email });
+  } catch (err) {
+    const error = new HttpError(
+      "Signing up failed, please try again later!",
+      500
+    );
+    return next(error);
+  }
+
+  if (userExistsAlready) {
     const error = new HttpError(
       "Email already exists, pick up a new one!",
       422
@@ -54,10 +64,10 @@ module.exports.signup = async (req, res, next) => {
   });
   try {
     await createdUser.save();
-    res.status(200).json({ User: createdUser });
+    res.status(201).json({ User: createdUser.toObject({ getters: true }) });
   } catch (err) {
     const error = new HttpError(
-      "Creating user failed, plesae check your data carefully!",
+      "Signing up failed, plesae check your data carefully!",
       500
     );
     return next(error);
