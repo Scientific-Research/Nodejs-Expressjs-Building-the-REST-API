@@ -5,31 +5,6 @@ const mongoose = require("mongoose");
 const Place = require("../models/place");
 const User = require("../models/user");
 
-// let DUMMY_PLACES = [
-//   {
-//     id: "p1",
-//     title: "Empire State Building",
-//     description: "one of the most famous sky scrapers in the World!",
-//     location: {
-//       lat: 40.7484405,
-//       lng: -73.9856644,
-//     },
-//     address: "20 W 34th St., New York, NY 10001, United States",
-//     creator: "u1",
-//   },
-//   {
-//     id: "p2",
-//     title: "Empire State Building",
-//     description: "one of the most famous sky scrapers in the World!",
-//     location: {
-//       lat: 40.7484405,
-//       lng: -73.9856644,
-//     },
-//     address: "20 W 34th St., New York, NY 10001, United States",
-//     creator: "u1",
-//   },
-// ];
-
 module.exports.getPlaceById = async (req, res, next) => {
   const placeId = req.params.pid;
   console.log(placeId);
@@ -123,7 +98,6 @@ module.exports.createPlace = async (req, res, next) => {
     return next(error);
   }
   console.log(user);
-  ///////////// Creating Places & Adding it to a User////////////////////////
 
   try {
     // await createdPlace.save();
@@ -133,6 +107,7 @@ module.exports.createPlace = async (req, res, next) => {
     user.places.push(createdPlace);
     await user.save({ session: sess });
     await sess.commitTransaction();
+    ///////////// Creating Places & Adding it to a User////////////////////////
   } catch (err) {
     const error = new HttpError(
       "Creating place failed, plesae check your data carefully!",
@@ -182,22 +157,25 @@ module.exports.deletePlace = async (req, res, next) => {
   const placeId = req.params.pid;
   console.log(placeId);
 
-  const place = await Place.findById(placeId);
-  if (!place) {
-    const error = new HttpError("Could not find a place for that id!", 404);
-    return next(error);
-  }
+  let place;
   try {
-    await Place.findByIdAndDelete(placeId);
-    console.log(Place);
-    res.status(200).json({
-      message: "Place was deleted successfully! ",
-    });
+    place = await Place.findByIdAndDelete(placeId);
+    console.log(place);
   } catch (err) {
     const error = new HttpError(
-      "Deleting place failed, plesae check your data carefully!",
+      "Deleting place failed, Could not find a place for that id!",
       500
     );
     return next(error);
   }
+  if (!place) {
+    const error = new HttpError(
+      "It was already deleted! Could not find a place for that id!",
+      500
+    );
+    return next(error);
+  }
+  res.status(200).json({
+    message: "Place was deleted successfully! ",
+  });
 };
