@@ -158,21 +158,37 @@ module.exports.deletePlace = async (req, res, next) => {
   console.log(placeId);
 
   let place;
+
   try {
-    place = await Place.findByIdAndDelete(placeId);
-    console.log(place);
+    place = await Place.findById(placeId).populate("creator");
+  } catch (err) {
+    const error = new HttpError(
+      "Something went wrong, Could not find a place for that id!",
+      500
+    );
+    return next(error);
+  }
+
+  if (!place) {
+    const error = new HttpError(
+      "It was already deleted! Could not find a place for that id!",
+      404
+    );
+    return next(error);
+  }
+  try {
+    const sess = await mongoose.startSession();
+    sess.startTransaction();
+    await place.deleteOne({ session: sess });
+    place.creator.places.pull(place);
+    await place.creator.save({ session: sess });
+    await sess.commitTransaction();
   } catch (err) {
     const error = new HttpError(
       "Deleting place failed, Could not find a place for that id!",
       500
     );
-    return next(error);
-  }
-  if (!place) {
-    const error = new HttpError(
-      "It was already deleted! Could not find a place for that id!",
-      500
-    );
+    console.log(err);
     return next(error);
   }
   res.status(200).json({
