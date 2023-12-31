@@ -48,6 +48,7 @@ module.exports.getPlacesByUserId = async (req, res, next) => {
     );
     return next(error);
   }
+  // if (!places || places.length === 0)
   if (!userWithPlaces || userWithPlaces.places.length === 0) {
     const error = new HttpError(
       "Could not find place(s) for the provided id!",
