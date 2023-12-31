@@ -33,27 +33,33 @@ module.exports.getPlaceById = async (req, res, next) => {
 module.exports.getPlacesByUserId = async (req, res, next) => {
   const userId = req.params.uid;
   console.log(userId);
+  // let places;
+  let userWithPlaces;
   try {
     // const places = await Place.find((p) => p.creator === userId);
-    const places = await Place.find({ creator: userId }); // find() give us an array
-    console.log(places);
-    if (places.length !== 0) {
-      return res.status(200).json({
-        Message: "These Places retrieved from Database: ",
-        // Places: places,
-        Places: places.map((place) => place.toObject({ getters: true })),
-      });
-    }
+    // places = await Place.find({ creator: userId }); // find() give us an array
+    userWithPlaces = await User.findById(userId).populate("places"); // give us all places
+    // for one user!
+    console.log(userWithPlaces);
   } catch (err) {
     const error = new HttpError(
-      "Could not find place(s) for the provided user id.",
-      422
+      "Something went wrong, please try again later!",
+      500
     );
     return next(error);
   }
-  return res
-    .status(422)
-    .json({ Message: "Could not find place(s) for the provided id!" });
+  if (!userWithPlaces || userWithPlaces.places.length === 0) {
+    const error = new HttpError(
+      "Could not find place(s) for the provided id!",
+      500
+    );
+    return next(error);
+  }
+  res.status(500).json({
+    Places: userWithPlaces.places.map((place) =>
+      place.toObject({ getters: true })
+    ),
+  });
 };
 
 module.exports.createPlace = async (req, res, next) => {
