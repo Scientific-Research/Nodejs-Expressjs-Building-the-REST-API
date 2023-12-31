@@ -33,7 +33,7 @@ module.exports.signup = async (req, res, next) => {
   }
 
   // const { name, email, password, image, places } = req.body;
-  const { name, email, password, image } = req.body; // places now are as an array
+  const { name, email, password } = req.body; // places now are as an array
   // in user.js, we have unique:true for email, but it doesn't show us the problem
   // but here it shows us the error in Terminal clearly!
 
@@ -61,7 +61,7 @@ module.exports.signup = async (req, res, next) => {
     name, // name:name
     email,
     password,
-    image,
+    image: "https://live.staticflickr.com/7631/26849088292_36fc52ee90_b.jpg",
     // places,
     places: [], // one user can have multiple places
   });
