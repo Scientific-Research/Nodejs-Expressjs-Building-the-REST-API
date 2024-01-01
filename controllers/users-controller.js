@@ -6,7 +6,7 @@ const User = require("../models/user");
 module.exports.getUsers = async (req, res, next) => {
   let users;
   try {
-    users = await User.find({}, "email name"); // one way
+    users = await User.find({}, "name email image"); // one way
     // users = await User.find({}, "-password"); // second way
   } catch (err) {
     const error = new HttpError(
