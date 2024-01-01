@@ -6,8 +6,8 @@ const User = require("../models/user");
 module.exports.getUsers = async (req, res, next) => {
   let users;
   try {
-    users = await User.find({}, "name email image"); // one way
-    // users = await User.find({}, "-password"); // second way
+    // users = await User.find({}, "name email image places"); // one way
+    users = await User.find({}, "-password"); // second way => find all things but password!
   } catch (err) {
     const error = new HttpError(
       "Fetching users failed, please try again later!",
