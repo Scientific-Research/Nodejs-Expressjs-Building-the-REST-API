@@ -74,7 +74,7 @@ module.exports.signup = async (req, res, next) => {
     );
     return next(error);
   }
-  res.status(201).json({ User: createdUser.toObject({ getters: true }) });
+  res.status(201).json({ user: createdUser.toObject({ getters: true }) });
   // res.status(200).json({ message: "Our created User:", User: createdUser });
 };
 
@@ -99,5 +99,8 @@ module.exports.login = async (req, res, next) => {
     // throw error;
     return next(error);
   }
-  res.status(200).json({ message: "User logged in!:", user: identifiedUser });
+  res.status(200).json({
+    message: "User logged in!:",
+    user: identifiedUser.toObject({ getters: true }),
+  });
 };
