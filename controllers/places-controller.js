@@ -56,8 +56,8 @@ module.exports.getPlacesByUserId = async (req, res, next) => {
     );
     return next(error);
   }
-  res.status(500).json({
-    Places: userWithPlaces.places.map((place) =>
+  res.status(200).json({
+    places: userWithPlaces.places.map((place) =>
       place.toObject({ getters: true })
     ),
   });
