@@ -1,4 +1,6 @@
 const fs = require("fs");
+const path = require("path");
+
 const express = require("express");
 // const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
@@ -11,6 +13,10 @@ const HttpError = require("./models/http-error");
 const app = express();
 // app.use(bodyParser.json());
 app.use(express.json());
+
+// middleware for images: http://localhost:5000/uploads/images => we have to have this
+// middleware for images here!
+app.use("/uploads/images", express.static(path.join("uploads", "images"))); // join these two parts together
 
 // a solution for CORS Problem in Browser
 app.use((req, res, next) => {
