@@ -72,7 +72,7 @@ module.exports.createPlace = async (req, res, next) => {
     );
   }
   // using destructuring:
-  const { title, description, image, address, creator } = req.body;
+  const { title, description, address, creator } = req.body;
 
   let coordinates;
   try {
@@ -83,8 +83,9 @@ module.exports.createPlace = async (req, res, next) => {
   const createdPlace = new Place({
     title,
     description,
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Empire_State_Building_%28aerial_view%29.jpg/400px-Empire_State_Building_%28aerial_view%29.jpg", // => File Upload module, will be replaced with real image url,
+    // image:
+    //   "https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Empire_State_Building_%28aerial_view%29.jpg/400px-Empire_State_Building_%28aerial_view%29.jpg", // => File Upload module, will be replaced with real image url,
+    image: req.file.path,
     address,
     location: coordinates,
     creator,

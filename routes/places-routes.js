@@ -14,6 +14,8 @@ const {
   deletePlace,
 } = require("../controllers/places-controller");
 
+const { fileUpload } = require("../middleware/file-upload");
+
 // oder
 // const placesControllers = require("../controllers/places-controller");
 
@@ -27,6 +29,7 @@ router.get("/user/:uid", getPlacesByUserId);
 
 router.post(
   "/",
+  fileUpload.single("image"),
   [
     check("title").not().isEmpty(),
     check("description").isLength({ min: 5 }),
