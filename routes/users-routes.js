@@ -7,6 +7,7 @@ const router = Router();
 const { check } = require("express-validator");
 
 const { getUsers, signup, login } = require("../controllers/users-controller");
+const { fileUpload } = require("../middleware/file-upload");
 
 // oder
 // const placesControllers = require("../controllers/places-controller");
@@ -15,6 +16,7 @@ const { getUsers, signup, login } = require("../controllers/users-controller");
 router.get("/", getUsers);
 router.post(
   "/signup",
+  fileUpload.single("image"),
   [
     check("name").not().isEmpty(),
     check("email")
