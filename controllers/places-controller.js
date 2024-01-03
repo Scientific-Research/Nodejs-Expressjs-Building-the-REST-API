@@ -1,3 +1,4 @@
+const fs = require("fs");
 const { validationResult } = require("express-validator");
 const HttpError = require("../models/http-error");
 const { getCoordsForAddress } = require("../util/location");
@@ -185,6 +186,9 @@ module.exports.deletePlace = async (req, res, next) => {
     );
     return next(error);
   }
+  // to get the image of place stored in schema-model-databank
+  const imagePath = place.image;
+
   try {
     const sess = await mongoose.startSession();
     sess.startTransaction();
@@ -200,6 +204,11 @@ module.exports.deletePlace = async (req, res, next) => {
     console.log(err);
     return next(error);
   }
+  // to delete(remove) it from uploads/images folder
+  fs.unlink(imagePath, (err) => {
+    console.log(err);
+  });
+
   res.status(200).json({
     message: "Place was deleted successfully! ",
   });
