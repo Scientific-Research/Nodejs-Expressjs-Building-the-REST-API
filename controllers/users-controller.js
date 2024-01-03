@@ -61,7 +61,10 @@ module.exports.signup = async (req, res, next) => {
     name, // name:name
     email,
     password,
-    image: "https://live.staticflickr.com/7631/26849088292_36fc52ee90_b.jpg",
+    // image: "https://live.staticflickr.com/7631/26849088292_36fc52ee90_b.jpg",
+    // image: "http://localhost:5000/" + req.file.path, // req.file.path is uploads/images/filename
+    image: req.file.path, // req.file.path is uploads/images/filename => we do the link in frontend
+    // in UserItem.jsx =>  image={`http://localhost:5000/${props.image}`}
     // places,
     places: [], // one user can have multiple places
   });
