@@ -106,14 +106,39 @@ module.exports.login = async (req, res, next) => {
     );
     return next(error);
   }
-  if (!identifiedUser || identifiedUser.password !== password) {
+  // if (!identifiedUser || identifiedUser.password !== password) {
+  if (!identifiedUser) {
     const error = new HttpError(
-      "Could not identify the user, credentials seem to be wrong!",
+      "Invalid credentials, could not log you in!",
       401
     );
     // throw error;
     return next(error);
   }
+
+  let isValidPassword = false;
+  // comparing the plain text pasword with hashed password!
+  // password is plain text password , identified.password is hashed password
+  // the result at the end is boolean which is stored in isValidPassword variable.
+  try {
+    isValidPassword = await bcrypt.compare(password, identifiedUser.password);
+  } catch (err) {
+    const error = new HttpError(
+      "Could not log you in, please check your credentials and try again!",
+      500
+    );
+    return next(error);
+  }
+
+  if (!isValidPassword) {
+    const error = new HttpError(
+      "Invalid credentials, could not log you in!",
+      401
+    );
+    // throw error;
+    return next(error);
+  }
+
   res.status(200).json({
     message: "User logged in!:",
     user: identifiedUser.toObject({ getters: true }),
