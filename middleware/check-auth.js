@@ -28,7 +28,7 @@ module.exports = (req, res, next) => {
     // when there is an error in decodedToken, it will jump to cath()
   } catch (err) {
     // Authorization header succeeds but don't give us the desired Token
-    const error = new HttpError("Authentication failed---!", 401);
+    const error = new HttpError("Authentication failed!", 403);
     return next(error);
   }
 };

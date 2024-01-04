@@ -139,7 +139,7 @@ module.exports.login = async (req, res, next) => {
   if (!identifiedUser) {
     const error = new HttpError(
       "Invalid credentials, could not log you in!",
-      401
+      403
     );
     // throw error;
     return next(error);
@@ -162,7 +162,7 @@ module.exports.login = async (req, res, next) => {
   if (!isValidPassword) {
     const error = new HttpError(
       "Invalid credentials, could not log you in!",
-      401
+      403
     );
     // throw error;
     return next(error);
