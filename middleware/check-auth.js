@@ -2,6 +2,12 @@ const jwt = require("jsonwebtoken");
 const HttpError = require("../models/http-error");
 
 module.exports = (req, res, next) => {
+  // this ensure that the OPTIONS method will not blocked and
+  // like other methods (post,patch and delete) will still be validated!
+  if (req.method === "OPTIONS") {
+    return next();
+  }
+
   let token;
   try {
     token = req.headers.authorization.split(" ")[1]; // Authorization: 'Bearer TOKEN'
