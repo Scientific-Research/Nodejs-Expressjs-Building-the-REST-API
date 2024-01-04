@@ -142,14 +142,9 @@ module.exports.updatePlace = async (req, res, next) => {
   // // first of all, we have to get the Place
   const placeId = req.params.pid;
   const { title, description } = req.body;
-  let updatedPlace;
+  let place;
   try {
-    updatedPlace = await Place.findById(placeId);
-    console.log("before updating title and description:" + updatedPlace);
-    updatedPlace.title = title;
-    updatedPlace.description = description;
-    console.log("after updating title and description:" + updatedPlace);
-    await updatedPlace.save();
+    place = await Place.findById(placeId);
   } catch (err) {
     const error = new HttpError(
       "Updating place failed, plesae check your data carefully!",
@@ -157,9 +152,28 @@ module.exports.updatePlace = async (req, res, next) => {
     );
     return next(error);
   }
+  // when they are not equal, this user did not created this place!
+  if (place.creator.toString() !== req.userData.userId) {
+    const error = new HttpError("You are not allowed to edit this place!", 401);
+    return next(error);
+  }
+
+  place.title = title;
+  place.description = description;
+
+  try {
+    await place.save();
+  } catch (err) {
+    const error = new HttpError(
+      "Something went wrong, could not update the place!",
+      500
+    );
+    return next(error);
+  }
+
   res.status(200).json({
     message: "Updated Place: ",
-    Place: updatedPlace.toObject({ getters: true }),
+    Place: place.toObject({ getters: true }),
   });
 };
 
