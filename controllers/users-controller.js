@@ -1,6 +1,7 @@
 // const { v4: uuidv4 } = require("uuid");
 const { validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const HttpError = require("../models/http-error");
 const User = require("../models/user");
 
@@ -80,6 +81,7 @@ module.exports.signup = async (req, res, next) => {
     // places,
     places: [], // one user can have multiple places
   });
+
   try {
     await createdUser.save();
   } catch (err) {
@@ -89,8 +91,35 @@ module.exports.signup = async (req, res, next) => {
     );
     return next(error);
   }
-  res.status(201).json({ user: createdUser.toObject({ getters: true }) });
+
+  // *************this setion is almost the same in login and signup sections!*************
+  let token;
+  try {
+    token = jwt.sign(
+      // we create token only with Id and
+      // email and not with password
+      { userId: createdUser.id, email: createdUser.email },
+      "supersecret_dont_share0485762893465783465", // our private key
+      { expiresIn: "1h" }
+    );
+  } catch (err) {
+    const error = new HttpError(
+      "Signing up failed, please try again later!",
+      500
+    );
+    return next(error);
+  }
+
+  res
+    .status(201)
+    // we send only the userId, email and token to the browser and not password and even
+    // not password in the Token,'cause, Token doesn't have email inside :)
+
+    .json({ userId: createdUser.id, email: createdUser.email, token: token });
+  // res.status(201).json({ user: createdUser.toObject({ getters: true }) });
   // res.status(200).json({ message: "Our created User:", User: createdUser });
+
+  // *************this setion is almost the same in login and signup sections!*************
 };
 
 module.exports.login = async (req, res, next) => {
@@ -101,7 +130,7 @@ module.exports.login = async (req, res, next) => {
     identifiedUser = await User.findOne({ email });
   } catch (err) {
     const error = new HttpError(
-      "Signing failed, plesae check your data carefully!",
+      "Logging in failed, plesae check your data carefully!",
       500
     );
     return next(error);
@@ -139,8 +168,32 @@ module.exports.login = async (req, res, next) => {
     return next(error);
   }
 
-  res.status(200).json({
-    message: "User logged in!:",
-    user: identifiedUser.toObject({ getters: true }),
+  // *************this setion is almost the same in login and signup sections!*************
+  let token;
+  try {
+    token = jwt.sign(
+      { userId: identifiedUser.id, email: identifiedUser.email },
+      "supersecret_dont_share0485762893465783465", // our private key
+      { expiresIn: "1h" }
+    );
+  } catch (err) {
+    const error = new HttpError(
+      "Logging in failed, please try again later!",
+      500
+    );
+    return next(error);
+  }
+
+  res.status(201).json({
+    userId: identifiedUser.id,
+    email: identifiedUser.email,
+    token: token,
   });
+
+  // *************this setion is almost the same in login and signup sections!*************
+
+  // res.status(200).json({
+  //   message: "User logged in!:",
+  //   user: identifiedUser.toObject({ getters: true }),
+  // });
 };
