@@ -73,7 +73,12 @@ module.exports.createPlace = async (req, res, next) => {
     );
   }
   // using destructuring:
-  const { title, description, address, creator } = req.body;
+  // const { title, description, address, creator } = req.body;
+  // for more security, it would be better don't get the id for creator from req from frontend,
+  // because it can be a false or manipulated Id and rely on the id extracted from token which comes
+  // from backend!
+  // const { title, description, address, creator } = req.body;
+  const { title, description, address } = req.body;
 
   let coordinates;
   try {
@@ -89,16 +94,18 @@ module.exports.createPlace = async (req, res, next) => {
     image: req.file.path,
     address,
     location: coordinates,
-    creator,
+    // creator,
+    creator: req.userData.userId, // we get the Id from userData from token and not from frontend!
   });
 
   ///////////// Creating Places & Adding it to a User////////////////////////
   let user;
   try {
-    user = await User.findById(creator);
+    // user = await User.findById(creator);
+    user = await User.findById(req.userData.userId);
   } catch (err) {
     const error = new HttpError(
-      "Creating place failed, plesae check your data carefully!",
+      "Creating place failed, plesae check your data carefully----!",
       500
     );
     return next(error);
