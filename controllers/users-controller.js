@@ -99,7 +99,8 @@ module.exports.signup = async (req, res, next) => {
       // we create token only with Id and
       // email and not with password
       { userId: createdUser.id, email: createdUser.email },
-      "supersecret_dont_share0485762893465783465", // our private key
+      // "supersecret_dont_share0485762893465783465", // our private key
+      process.env.JWT_KEY,
       { expiresIn: "1h" }
     );
   } catch (err) {
@@ -173,7 +174,8 @@ module.exports.login = async (req, res, next) => {
   try {
     token = jwt.sign(
       { userId: identifiedUser.id, email: identifiedUser.email },
-      "supersecret_dont_share0485762893465783465", // our private key
+      // "supersecret_dont_share0485762893465783465", // our private key
+      process.env.JWT_KEY,
       { expiresIn: "1h" }
     );
   } catch (err) {

@@ -59,7 +59,8 @@ const connectDB = async () => {
   try {
     // mongoose.connect() does open, close and all other thing...
     await mongoose.connect(
-      "mongodb+srv://Maximilian:4N22oIntIDURyhVl@cluster0.ki7w2ay.mongodb.net/MERN-STACK?retryWrites=true&w=majority"
+      // "mongodb+srv://Maximilian:4N22oIntIDURyhVl@cluster0.ki7w2ay.mongodb.net/MERN-STACK?retryWrites=true&w=majority"
+      `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.ki7w2ay.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`
       // { useNewUrlParser: true, useUnifiedTopology: true }
     );
     // console.log("Connected to database!");

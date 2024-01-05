@@ -20,7 +20,8 @@ module.exports = (req, res, next) => {
     // to verify our Token with our private key used to produce the Token
     const decodedToken = jwt.verify(
       token,
-      "supersecret_dont_share0485762893465783465"
+      // "supersecret_dont_share0485762893465783465"
+      process.env.JWT_KEY
     );
     req.userData = { userId: decodedToken.userId }; // when there is no error in decodedToken,
     // to add userId extracted from Token to userData to req, hence, our userData in req contains userId!
