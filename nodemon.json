@@ -1,9 +1,0 @@
-{
-  "env": {
-    "DB_USER": "Maximilian",
-    "DB_PASSWORD": "4N22oIntIDURyhVl",
-    "DB_NAME": "MERN-STACK",
-    "GOOGLE_API_KEY": "AIzaSyAu5FGH8o4-lbmtbivywRtcIJt8rOSaL8U",
-    "JWT_KEY": "supersecret_dont_share0485762893465783465"
-  }
-}

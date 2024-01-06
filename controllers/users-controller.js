@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const HttpError = require("../models/http-error");
 const User = require("../models/user");
+const config = require("../config.js");
 
 module.exports.getUsers = async (req, res, next) => {
   let users;
@@ -100,7 +101,7 @@ module.exports.signup = async (req, res, next) => {
       // email and not with password
       { userId: createdUser.id, email: createdUser.email },
       // "supersecret_dont_share0485762893465783465", // our private key
-      process.env.JWT_KEY,
+      config.JWT_KEY,
       { expiresIn: "1h" }
     );
   } catch (err) {
@@ -175,7 +176,7 @@ module.exports.login = async (req, res, next) => {
     token = jwt.sign(
       { userId: identifiedUser.id, email: identifiedUser.email },
       // "supersecret_dont_share0485762893465783465", // our private key
-      process.env.JWT_KEY,
+      config.JWT_KEY,
       { expiresIn: "1h" }
     );
   } catch (err) {

@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const HttpError = require("../models/http-error");
+const config = require("../config.js");
 
 module.exports = (req, res, next) => {
   // this ensure that the OPTIONS method will not blocked and
@@ -21,7 +22,7 @@ module.exports = (req, res, next) => {
     const decodedToken = jwt.verify(
       token,
       // "supersecret_dont_share0485762893465783465"
-      process.env.JWT_KEY
+      config.JWT_KEY
     );
     req.userData = { userId: decodedToken.userId }; // when there is no error in decodedToken,
     // to add userId extracted from Token to userData to req, hence, our userData in req contains userId!

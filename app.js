@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-
+const config = require("./config.js");
 const express = require("express");
 // const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
@@ -60,7 +60,7 @@ const connectDB = async () => {
     // mongoose.connect() does open, close and all other thing...
     await mongoose.connect(
       // "mongodb+srv://Maximilian:4N22oIntIDURyhVl@cluster0.ki7w2ay.mongodb.net/MERN-STACK?retryWrites=true&w=majority"
-      `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.ki7w2ay.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`
+      `mongodb+srv://${config.DB_USER}:${config.DB_PASSWORD}@cluster0.ki7w2ay.mongodb.net/${config.DB_NAME}?retryWrites=true&w=majority`
       // { useNewUrlParser: true, useUnifiedTopology: true }
     );
     // console.log("Connected to database!");
