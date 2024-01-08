@@ -64,8 +64,8 @@ const connectDB = async () => {
       // { useNewUrlParser: true, useUnifiedTopology: true }
     );
     // console.log("Connected to database!");
-    app.listen(5000, () => {
-      console.log("Server started successfully!");
+    app.listen(config.PORT, () => {
+      console.log(`Server started on PORT ${config.PORT} successfully!`);
       // console.log("Connected to Database successfully!");
     });
   } catch (error) {
